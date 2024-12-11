@@ -1,11 +1,16 @@
 # src/llm_client.py
 import os
-import openai
+from openai import OpenAI
 
-openai.api_key = os.environ.get("OPENAI_API_KEY")
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY")
+)
 
-def ask_llm(system_prompt, user_prompt, model="gpt-3.5-turbo", temperature=0.2):
-    response = openai.ChatCompletion.create(
+def ask_llm(system_prompt, user_prompt, model="gpt-4", temperature=0.2):
+    """
+    Send a conversation (system and user messages) to the LLM and return the assistant's reply.
+    """
+    completion = client.chat.completions.create(
         model=model,
         messages=[
             {"role": "system", "content": system_prompt},
@@ -13,4 +18,12 @@ def ask_llm(system_prompt, user_prompt, model="gpt-3.5-turbo", temperature=0.2):
         ],
         temperature=temperature
     )
-    return response.choices[0].message["content"]
+    # Extract and return the assistant's message content
+    return completion.choices[0].message["content"]
+
+if __name__ == "__main__":
+    # Quick test
+    system = "You are a helpful assistant."
+    user = "Write a haiku about recursion in programming."
+    response = ask_llm(system, user)
+    print(response)
