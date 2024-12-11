@@ -1,12 +1,13 @@
 # src/llm_client.py
 import os
 from openai import OpenAI
-
+from dotenv import load_dotenv
+load_dotenv()
 client = OpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY")
+    api_key=os.getenv("OPENAI_API_KEY")
 )
 
-def ask_llm(system_prompt, user_prompt, model="gpt-4", temperature=0.2):
+def ask_llm(system_prompt, user_prompt, model="gpt-4o", temperature=0.2):
     """
     Send a conversation (system and user messages) to the LLM and return the assistant's reply.
     """
@@ -19,7 +20,8 @@ def ask_llm(system_prompt, user_prompt, model="gpt-4", temperature=0.2):
         temperature=temperature
     )
     # Extract and return the assistant's message content
-    return completion.choices[0].message["content"]
+    print(completion.choices[0].message.content)
+    return completion.choices[0].message.content
 
 if __name__ == "__main__":
     # Quick test

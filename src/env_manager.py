@@ -9,6 +9,7 @@ def create_venv(venv_path):
 def install_dependencies(dependencies, venv_path=None):
     if venv_path:
         python_executable = os.path.join(venv_path, 'Scripts', 'python.exe') if os.name == 'nt' else os.path.join(venv_path, 'bin', 'python')
+
     else:
         python_executable = 'python'
     for dep in dependencies:
@@ -20,6 +21,7 @@ def install_dependencies(dependencies, venv_path=None):
 def run_python_file(file_path, venv_path=None):
     if venv_path:
         python_executable = os.path.join(venv_path, 'Scripts', 'python.exe') if os.name == 'nt' else os.path.join(venv_path, 'bin', 'python')
+
     else:
         python_executable = 'python'
     success, output = run_command(f"{python_executable} {file_path}")

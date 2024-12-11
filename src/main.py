@@ -1,10 +1,12 @@
 # src/main.py
 import sys
+import os
 from .llm_client import ask_llm
 from .prompts import SYSTEM_PROMPT, USER_PROMPT
 from .instructions_parser import parse_instructions
 from .env_manager import create_venv, install_dependencies, run_python_file
 from .file_manager import create_file
+
 
 def main():
     # Ask LLM for initial instructions
@@ -22,10 +24,12 @@ def main():
         action = step.get("action")
         if action == "create_venv":
             venv_path = step.get("path", "./venv")
+            venv_path = os.path.abspath(venv_path)
             success, output = create_venv(venv_path)
             execution_log.append({"step": i, "action": action, "success": success, "output": output})
             print("Create venv:", output)
             if not success:
+                print("Checking if python in venv exists:", os.path.exists(os.path.join(venv_path, 'Scripts', 'python.exe')))
                 break
 
         elif action == "install_deps":
