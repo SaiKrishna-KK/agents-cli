@@ -1,15 +1,19 @@
+
 # src/main.py
-import sys
 import os
+import sys
 from .llm_client import ask_llm
 from .prompts import SYSTEM_PROMPT, USER_PROMPT
 from .instructions_parser import parse_instructions
 from .env_manager import create_venv, install_dependencies, run_python_file
 from .file_manager import create_file
 
-
 def main():
-    # Ask LLM for initial instructions
+    # Ensure the llm-cli-testing directory exists
+    project_dir = "llm-cli-testing"
+    os.makedirs(project_dir, exist_ok=True)
+    os.chdir(project_dir)
+
     instructions = ask_llm(SYSTEM_PROMPT, USER_PROMPT)
     steps = parse_instructions(instructions)
 
@@ -24,6 +28,7 @@ def main():
         action = step.get("action")
         if action == "create_venv":
             venv_path = step.get("path", "./venv")
+            # Make venv_path absolute based on the project_dir
             venv_path = os.path.abspath(venv_path)
             success, output = create_venv(venv_path)
             execution_log.append({"step": i, "action": action, "success": success, "output": output})
@@ -57,7 +62,7 @@ def main():
                 error_feedback = f"The code failed with error:\n{output}"
                 revised_instructions = ask_llm(SYSTEM_PROMPT, error_feedback)
                 print("LLM Revised Instructions:\n", revised_instructions)
-                # In a real loop, you'd parse and retry. For now, just stop.
+                # In a real scenario, parse and retry. Here, just stop.
                 break
 
     # Print final execution log
@@ -67,3 +72,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
