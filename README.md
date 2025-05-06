@@ -12,6 +12,73 @@ The main goal of this project is to create an intelligent agent system that:
 4. **Integrates with Cursor IDE** for a seamless development experience
 5. **Operates via terminal or server mode** for flexibility in different workflows
 
+## Why Build on Top of Cursor?
+
+Cursor already has a built-in agent that uses GPT to help you code, refactor, and answer questions about your codebase. So then:
+
+### 🧩 **1. Granular Control and Automation**
+
+* **Cursor's agent is reactive**: It answers when you prompt it manually.
+* **Agents CLI is proactive and modular**:
+
+  * You can *automate a sequence of tasks* (e.g., generate → test → debug → commit).
+  * You can trigger agents from the **terminal, server, or scripts**, not just within the editor.
+
+**Example**:
+
+> `"Create a React login page"` → auto generates the file, adds tests, opens it in Cursor, and creates a commit — all through CLI.
+
+### 💡 **2. Local LLM Support (Privacy + Cost Saving)**
+
+* Cursor's agent uses OpenAI GPT-4 or Anthropic Claude via API.
+* **Agents CLI supports local models** (via LM Studio), reducing:
+
+  * **API cost**
+  * **Latency**
+  * **Data privacy concerns**
+
+**Example**:
+
+> `"Refactor this file"` is done via a local Mistral model, not OpenAI.
+
+### 🔀 **3. Task Routing + Custom Agents**
+
+* Cursor doesn't let you **define and route tasks** based on complexity.
+* With Agents CLI:
+
+  * You can **define workflows**.
+  * Decide if a **simple code-gen** should go to local, and a **critical refactor** should use GPT-4.
+
+### 🧠 **4. Memory & State Management**
+
+* Cursor doesn't persist memory across sessions unless you handle it manually.
+* Agents CLI can maintain a **long-term memory/state**, helping:
+
+  * Track task history
+  * Remember project-wide decisions
+  * Reuse prior outputs
+
+### 📡 **5. API & Server Mode = Headless DevOps**
+
+* You can **integrate it with your own tools** (AutoMind, voice agents, web UIs).
+* Run it in **server mode** and send tasks from:
+
+  * Phone
+  * Cron job
+  * VSCode
+  * Custom dashboard
+
+### ✅ Feature Comparison
+
+| Feature                       | Cursor Built-in Agent | Agents CLI System |
+| ----------------------------- | --------------------- | ----------------- |
+| Natural Language Coding       | ✅ Yes                 | ✅ Yes             |
+| Custom Multi-Agent Workflow   | ❌ No                  | ✅ Yes             |
+| Local LLM Support             | ❌ No                  | ✅ Yes             |
+| Server/Terminal Automation    | ❌ No                  | ✅ Yes             |
+| Memory & Task State           | ❌ Limited             | ✅ Yes             |
+| Complexity-Based Task Routing | ❌ No                  | ✅ Yes             |
+
 ## Features
 
 - **Multiple Agent Types**: Developer, Tester, Debugger, and Code Generation agents
