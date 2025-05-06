@@ -156,7 +156,3 @@ Tasks are automatically routed based on complexity:
 ## Testing
 
 For testing without actual API access, set `USE_MOCK_RESPONSES=true` in your `.env` file.
-
-## License
-
-MIT 
