@@ -189,6 +189,235 @@ You can then send tasks to the server via HTTP:
 curl -X POST http://localhost:8080/execute -H "Content-Type: application/json" -d '{"task": "Create a function to validate email addresses"}'
 ```
 
+## Detailed Usage Guide
+
+This section provides a comprehensive explanation of how to use the Agents CLI effectively for different workflows and scenarios.
+
+### Command Structure
+
+All commands follow this general format:
+```
+python src/main.py COMMAND [OPTIONS] "INSTRUCTIONS"
+```
+
+Where:
+- `COMMAND` is one of: project, dev, task, code, cursor, server
+- `OPTIONS` are command-specific flags and parameters
+- `INSTRUCTIONS` is the natural language description of what you want to accomplish
+
+### Developer Agent (dev)
+
+The developer agent helps you create and manage complete projects. It can:
+- Set up project structure
+- Install dependencies
+- Create and modify files
+- Run commands
+
+**Example 1: Create a Flask REST API with database**
+```bash
+python src/main.py dev "Create a Flask API with SQLAlchemy integration, JWT authentication, and endpoints for user registration, login, and profile management."
+```
+
+**Example 2: Configure a project with specific packages**
+```bash
+python src/main.py dev "Set up a Django project with Django REST framework, Celery for task queue, and PostgreSQL configuration."
+```
+
+### Code Generation (code)
+
+The code generation command creates specific files based on your instructions.
+
+**Example 1: Generate a utility function**
+```bash
+python src/main.py code "Create a utility module with functions for data validation including email, phone numbers, and credit cards" --file utils/validators.py
+```
+
+**Example 2: Create a complex class**
+```bash
+python src/main.py code "Create a ThreadPool class that manages a pool of worker threads for parallel task execution with proper error handling and results collection" --file utils/thread_pool.py
+```
+
+**Example 3: Generate in a specific language**
+```bash
+python src/main.py code "Create a linked list implementation with methods for insertion, deletion, and traversal" --file linked_list.js --language javascript
+```
+
+### Cursor Integration (cursor)
+
+The cursor command interacts directly with the Cursor IDE.
+
+**Example 1: Code refactoring**
+```bash
+python src/main.py cursor "Open file app.py and refactor the authentication function to use JWT tokens instead of sessions"
+```
+
+**Example 2: Create and run tests**
+```bash
+python src/main.py cursor "Create unit tests for all functions in utils.py and run them"
+```
+
+**Example 3: Add documentation**
+```bash
+python src/main.py cursor "Add proper docstrings to all functions in the models directory following the Google Python style guide"
+```
+
+### General Tasks (task)
+
+The task command routes your request to the most appropriate agent based on complexity and requirements.
+
+**Example 1: Create a complete feature**
+```bash
+python src/main.py task "Add password reset functionality to my Flask application, including email sending, token generation, and frontend forms"
+```
+
+**Example 2: Debug an issue**
+```bash
+python src/main.py task "My React component isn't rendering properly when I pass the following props... Help me debug and fix it"
+```
+
+**Example 3: Refactor code**
+```bash
+python src/main.py task "Refactor my Redux store to use Redux Toolkit and implement proper slicing of the state"
+```
+
+### Server Mode
+
+Server mode allows you to run the agent as a service and send tasks via HTTP requests.
+
+**Starting the server**:
+```bash
+python src/main.py server --port 8080
+```
+
+**Sending tasks from different sources**:
+
+1. Using curl:
+```bash
+curl -X POST http://localhost:8080/execute \
+  -H "Content-Type: application/json" \
+  -d '{"task": "Create a React component for displaying paginated data from an API"}'
+```
+
+2. Using Python requests:
+```python
+import requests
+response = requests.post(
+    "http://localhost:8080/execute",
+    json={"task": "Create an authentication middleware for Express.js"}
+)
+print(response.json())
+```
+
+3. From a web application:
+```javascript
+fetch('http://localhost:8080/execute', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    task: 'Create a utility function for formatting dates in different locales'
+  }),
+})
+.then(response => response.json())
+.then(data => console.log(data));
+```
+
+### Workflow Examples
+
+#### Example 1: Full-Stack Feature Development
+
+1. Create the backend API endpoints:
+```bash
+python src/main.py task "Create REST API endpoints for a blog post feature using Express and MongoDB"
+```
+
+2. Generate the frontend components:
+```bash
+python src/main.py code "Create a React component for displaying and editing blog posts" --file src/components/BlogPost.jsx --language javascript
+```
+
+3. Write tests for the API:
+```bash
+python src/main.py task "Write Jest tests for the blog post API endpoints"
+```
+
+#### Example 2: Project Bootstrap
+
+1. Set up the project structure:
+```bash
+python src/main.py dev "Create a Python CLI tool with Click for argument parsing, proper package structure, and logging"
+```
+
+2. Add core functionality:
+```bash
+python src/main.py task "Implement the core functionality to scrape data from websites and export to CSV and JSON formats"
+```
+
+3. Create documentation:
+```bash
+python src/main.py cursor "Generate README.md documentation with installation and usage instructions"
+```
+
+### Tips for Effective Prompts
+
+1. **Be specific about requirements**:
+   - Good: "Create a function to validate email addresses with RFC 5322 compliance"
+   - Less effective: "Make an email validator"
+
+2. **Include context when necessary**:
+   - Good: "My project uses React 18 with TypeScript. Create a custom hook for handling form state."
+   - Less effective: "Create a form hook"
+
+3. **Specify output format if important**:
+   - Good: "Generate a user authentication module using JWT tokens and return appropriate HTTP status codes for each outcome"
+   - Less effective: "Create authentication"
+
+4. **Break complex tasks into smaller ones**:
+   - Instead of one giant task, chain together focused tasks for better results
+
+### Using with Local LLMs
+
+For privacy or to reduce costs, you can run tasks using local LLMs through LM Studio:
+
+1. Make sure LM Studio is running and the server is started
+2. Ensure your .env has the correct LLM_STUDIO_API_URL and model name
+3. For lightweight tasks:
+```bash
+# This explicitly sets task complexity to "low" to use local LLM
+export DEFAULT_COMPLEXITY=low
+python src/main.py code "Create a simple function to calculate factorial" --file math_utils.py
+```
+
+### Integration with Other Tools
+
+#### Git Workflows
+
+You can incorporate Agents CLI into git hooks or workflows:
+
+```bash
+# Example pre-commit hook that asks the agent to review your changes
+git diff --cached | python src/main.py task "Review these changes and suggest improvements"
+```
+
+#### CI/CD Pipelines
+
+In a CI/CD pipeline script:
+
+```bash
+# Generate unit tests for new code
+python src/main.py task "Generate unit tests for all functions without existing tests in the src directory"
+```
+
+#### Combined with Cron Jobs
+
+Set up automated tasks:
+
+```bash
+# Add to crontab to run daily code quality checks
+0 0 * * * cd /path/to/project && python src/main.py task "Check for code smells and suggest refactoring in files modified in the last 24 hours" > /path/to/reports/daily_code_review.txt
+```
+
 ## Architecture
 
 The system is composed of several modules:
